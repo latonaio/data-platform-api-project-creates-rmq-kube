@@ -1,0 +1,50 @@
+{
+	"connection_key": "request",
+	"result": true,
+	"redis_key": "abcdefg",
+	"filepath": "/var/lib/aion/Data/rededge_sdc/abcdef.json",
+	"api_status_code": 200,
+	"runtime_session_id": "boi9ar543dg91ipdnspi099u231280ab0v8af0ew",
+	"business_partner": null,
+	"service_label": "PROJECT",
+	"api_type": "creates",
+	"Project": {
+		"Project": null,
+		"ProjectCode": "",
+		"ProjectDescription": "",
+		"OwnerBusinessPartner": null,
+		"OwnerPlant": "",
+		"ProjectProfile": "",
+		"ResponsiblePerson": null,
+		"ResponsiblePersonName": "",
+		"PlannedStartDate": "",
+		"PlannedEndDate": "",
+		"ActualStartDate": "",
+		"ActualEndDate": "",
+		"CreationDate": "",
+		"LastChangeDate": "",
+		"IsMarkedForDeletion": "",
+		"WBSElement": [
+			{
+				"WBSElement": null,
+				"WBSElementCode": "",
+				"WBSDescription": "",
+				"BusinessPartner": null,
+				"Plant": "",
+				"ResponsiblePerson": null,
+				"ResponsiblePersonName": "",
+				"PlannedStartDate": "",
+				"PlannedEndDate": "",
+				"ActualStartDate": "",
+				"ActualEndDate": "",
+				"CreationDate": "",
+				"LastChangeDate": "",
+				"IsMarkedForDeletion": ""
+			}
+		]
+	},
+	"api_schema": "DPFMProjectCreates",
+	"accepter": [
+		"Project"
+	]
+}
