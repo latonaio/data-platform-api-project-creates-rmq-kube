@@ -40,7 +40,7 @@ func ConvertToNetworkCreates(sdc *dpfm_api_input_reader.SDC) (*[]Network, error)
 }
 
 func ConvertToWBSElementCreates(sdc *dpfm_api_input_reader.SDC) (*[]WBSElement, error) {
-	roles := make([]WBSElement, 0)
+	wBSElement := make([]WBSElement, 0)
 
 	for _, data := range sdc.Project.WBSElement {
 		wBSElement, err := TypeConverter[*WBSElement](data)

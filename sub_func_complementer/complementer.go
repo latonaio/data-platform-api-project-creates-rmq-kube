@@ -52,7 +52,7 @@ func (c *SubFuncComplementer) ComplementProject(input *dpfm_api_input_reader.SDC
 
 	subfuncSDC.SubfuncResult = s.SubfuncResult
 	subfuncSDC.SubfuncError = s.SubfuncError
-	subfuncSDC.Message.Header = s.Message.Header
+	subfuncSDC.Message.Project = s.Message.Project
 	return nil
 }
 
@@ -86,31 +86,34 @@ func getBoolPtr(b bool) *bool {
 	return &b
 }
 
-func (c *SubFuncComplementer) ComplementProductionOrder(input *dpfm_api_input_reader.SDC, l *logger.Logger) (*NumberRange, error) {
-	rows, err := c.db.Query(
-		`SELECT NumberRangeID, ServiceLabel, FieldNameWithNumberRange, LatestNumber
-		FROM DataPlatformCommonSettingsMysqlKube.data_platform_number_range_latest_number_data
-		WHERE (ServiceLabel, FieldNameWithNumberRange) = ( (?, 'ProductionOrder') );`, input.ServiceLabel,
-	)
+func (c *SubFuncComplementer) ComplementWBSElement(input *dpfm_api_input_reader.SDC, subfuncSDC *SDC, l *logger.Logger) error {
+	s := &SDC{}
+	res, err := c.rmq.SessionKeepRequest(nil, c.c.RMQ.QueueToSubFunc()["WBSElements"], input)
 	if err != nil {
-		return nil, xerrors.Errorf("DB Query error: %w", err)
+		return err
 	}
-	nr := NumberRange{}
-	if !rows.Next() {
-		return nil, xerrors.Errorf("number range does not exist")
-	}
-	err = rows.Scan(
-		&nr.NumberRangeID,
-		&nr.ServiceLabel,
-		&nr.FieldNameWithNumberRange,
-		&nr.LatestNumber,
-	)
+	res.Success()
+
+	err = json.Unmarshal(res.Raw(), s)
 	if err != nil {
-		return nil, xerrors.Errorf("DB Scan error: %w", err)
+		return err
 	}
-	nr.LatestNumber++
-	input.Header.ProductionOrder = nr.LatestNumber
-	return &nr, nil
+	b, _ := json.Marshal(s.Message)
+	msg := &Message{}
+	err = json.Unmarshal(b, msg)
+	if err != nil {
+		return err
+	}
+	subfuncSDC.SubfuncResult = s.SubfuncResult
+	subfuncSDC.SubfuncError = s.SubfuncError
+
+	subfuncSDC.Message.Network = msg.Network
+
+	return err
+}
+
+func getBoolPtr(b bool) *bool {
+	return &b
 }
 
 func (c *SubFuncComplementer) IncrementLatestNumber(nr *NumberRange, l *logger.Logger) error {
